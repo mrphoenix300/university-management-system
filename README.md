@@ -67,7 +67,7 @@ implementation
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd Academic-Management-System
+cd university-management-system
 
 # Compile the project
 g++ -std=c++11 main.cpp Person.cpp Student.cpp Professor.cpp Course.cpp Secretary.cpp -o university_system
@@ -143,7 +143,7 @@ This project demonstrates advanced C++ programming concepts:
 
 ## 🤝 Contributing
 
-This was a university project, but contributions and improvements are welcome
+This was a university project, but contributions and improvements are welcome.
 
 ## 📜 License
 
