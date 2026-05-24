@@ -12,273 +12,135 @@
 
 using namespace std;
 
-// Description: Adds a student's details to a file.
-// Parameters:
-// student: A Student object containing the student's information.
-// filename: Name of the file where the student's details will be appended.
-// Functionality: Opens the specified file in append mode and writes the student's details using the overloaded << operator.
 void addStudentToFile(const Student &student, const string &filename) {
-   ofstream outFile(filename, ios::app); // Open file in append mode
-   if (outFile.is_open()) {
-      outFile << student << endl; // Use overloaded << operator
-   }
+   ofstream outFile(filename, ios::app);
+   if (outFile.is_open()) outFile << student << endl;
 }
 
-// Description: Modifies an existing student's details in a file.
-// Parameters:
-// studentID: Identifier of the student to be updated.
-// updatedStudent: A Student object containing the updated information.
-// filename: Name of the file where the modification will take place.
-// Functionality: Reads students from the file, replaces the student with the given ID with updated information, and then writes back all the student details to the file.
 void modifyStudentInFile(const string &studentID, const Student &updatedStudent, const string &filename) {
    vector<Student> students;
    Student temp;
    ifstream inFile(filename);
-   ofstream outFile("temp.csv"); // Temporary file
-
+   ofstream outFile("temp.csv");
    while (inFile >> temp) {
-      if (temp.get_studentID() == studentID) {
-         students.push_back(updatedStudent); // Replace with updated student
-      } else {
-         students.push_back(temp);
-      }
+      if (temp.get_studentID() == studentID) students.push_back(updatedStudent);
+      else students.push_back(temp);
    }
-
    inFile.close();
-   for (const auto &student : students) {
-      outFile << student << endl;
-   }
-
+   for (const auto &student : students) outFile << student << endl;
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Deletes a student's details from a file.
-// Parameters:
-// studentID: Identifier of the student to be deleted.
-// filename: Name of the file from which the student's details will be removed.
-// Functionality: Reads and writes all student details except the one to be deleted into a temporary file, then replaces the original file with this temporary file.
 void deleteStudentFromFile(const string &studentID, const string &filename) {
    ifstream inFile(filename);
    ofstream outFile("temp.csv");
    Student temp;
-
-   if (!inFile.is_open() || !outFile.is_open()) {
-      return;
-   }
-
+   if (!inFile.is_open() || !outFile.is_open()) return;
    while (inFile >> temp) {
-      if (temp.get_studentID() != studentID) {
-         outFile << temp << endl; // Write all students except the one to delete
-      }
+      if (temp.get_studentID() != studentID) outFile << temp << endl;
    }
-
    inFile.close();
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Adds a professor's details to a file.
-// Parameters:
-// professor: A Professor object containing the professor's information.
-// filename: Name of the file where the professor's details will be appended.
-// Functionality: Similar to addStudentToFile, but for a Professor object.
 void addProfessorToFile(const Professor &professor, const string &filename) {
    ofstream outFile(filename, ios::app);
-   if (outFile.is_open()) {
-      outFile << professor << endl;
-   }
+   if (outFile.is_open()) outFile << professor << endl;
 }
 
-// Description: Modifies an existing professor's details in a file.
-// Parameters: Similar to modifyStudentInFile, but for a Professor object.
-// Functionality: Similar to modifyStudentInFile, but for a Professor object.
 void modifyProfessorInFile(const string &professorid, const Professor &updatedProfessor, const string &filename) {
    vector<Professor> professors;
    Professor temp;
    ifstream inFile(filename);
    ofstream outFile("temp.csv");
-
    while (inFile >> temp) {
-      if (temp.get_professorid() == professorid) {
-         professors.push_back(updatedProfessor);
-      } else {
-         professors.push_back(temp);
-      }
+      if (temp.get_professorid() == professorid) professors.push_back(updatedProfessor);
+      else professors.push_back(temp);
    }
-
    inFile.close();
-   for (const auto &professor : professors) {
-      outFile << professor << endl;
-   }
-
+   for (const auto &professor : professors) outFile << professor << endl;
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Deletes a professor's details from a file.
-// Parameters: Similar to deleteStudentFromFile, but for a Professor object.
-// Functionality: Similar to deleteStudentFromFile, but for a Professor object.
 void deleteProfessorFromFile(const string &professorid, const string &filename) {
    ifstream inFile(filename);
    ofstream outFile("temp.csv");
    Professor temp;
-
-   if (!inFile.is_open() || !outFile.is_open()) {
-      return;
-   }
-
+   if (!inFile.is_open() || !outFile.is_open()) return;
    while (inFile >> temp) {
-      if (temp.get_professorid() != professorid) {
-         outFile << temp << endl;
-      }
+      if (temp.get_professorid() != professorid) outFile << temp << endl;
    }
-
    inFile.close();
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Adds a course's details to a file.
-// Parameters: Similar to addStudentToFile, but for a Course object.
-// Functionality: Similar to addStudentToFile, but for a Course object.
 void addCourseToFile(const Course &course, const std::string &filename) {
    ofstream outFile(filename, ios::app);
-   if (outFile.is_open()) {
-      outFile << course << endl;
-   }
+   if (outFile.is_open()) outFile << course << endl;
 }
 
-// Description: Modifies an existing course's details in a file.
-// Parameters: Similar to modifyStudentInFile, but for a Course object.
-// Functionality: Similar to modifyStudentInFile, but for a Course object.
 void modifyCourseInFile(const string &course_name, const Course &updatedCourse, const string &filename) {
    vector<Course> courses;
    Course temp;
    ifstream inFile(filename);
    ofstream outFile("temp.csv");
-
    while (inFile >> temp) {
-      if (temp.get_name() == course_name) {
-         courses.push_back(updatedCourse);
-      } else {
-         courses.push_back(temp);
-      }
+      if (temp.get_name() == course_name) courses.push_back(updatedCourse);
+      else courses.push_back(temp);
    }
-
    inFile.close();
-   for (const auto &course : courses) {
-      outFile << course << endl;
-   }
-
+   for (const auto &course : courses) outFile << course << endl;
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Deletes a course's details from a file.
-// Parameters: Similar to deleteStudentFromFile, but for a Course object.
-// Functionality: Similar to deleteStudentFromFile, but for a Course object.
 void deleteCourseFromFile(const string &course_name, const string &filename) {
    ifstream inFile(filename);
    ofstream outFile("temp.csv");
    Course temp;
-
-   if (!inFile.is_open() || !outFile.is_open()) {
-      return;
-   }
-
+   if (!inFile.is_open() || !outFile.is_open()) return;
    while (inFile >> temp) {
-      if (temp.get_name() != course_name) {
-         outFile << temp << endl;
-      }
+      if (temp.get_name() != course_name) outFile << temp << endl;
    }
-
    inFile.close();
    outFile.close();
-   if (remove(filename.c_str()) != 0) {
-      std::cerr << "Error deleting old file\n";
-   }
-
-   if (rename("temp.csv", filename.c_str()) != 0) {
-      std::cerr << "Error renaming new file\n";
-   }
+   remove(filename.c_str());
+   rename("temp.csv", filename.c_str());
 }
 
-// Description: Loads student information for a secretary from a file.
-// Parameters:
-// sec: A Secretary object to which the student information will be added.
-// filename: Name of the file containing student information.
-// Functionality: Reads student information from the file and adds each student to the Secretary object.
 void loadStudentsforSecretatry(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Student temp;
-
-   while (inFile >> temp) { 
-      sec.add_student(temp);
-   }
+   while (inFile >> temp) sec.add_student(temp);
    inFile.close();
 }
 
-// Description: Similar to loadStudentsforSecretary, but for loading professor information.
 void loadProfesssorsforSecretary(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Professor temp;
-
-   while (inFile >> temp) {
-      sec.add_professor(temp);
-   }
+   while (inFile >> temp) sec.add_professor(temp);
    inFile.close();
 }
 
-// Description: Similar to loadStudentsforSecretary, but for loading course information.
 void loadCoursesforSecretary(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Course temp;
-   while (inFile >> temp) {
-      sec.add_course(temp);
-   }
+   while (inFile >> temp) sec.add_course(temp);
    inFile.close();
 }
 
-// Description: Shows details of students who passed a course in a file.
-// Parameters:
-// course: A Course object containing information about the course and enrolled students.
-// filename: Name of the file where details of passing students will be written.
-// Functionality: Checks each enrolled student's passing status in the course and writes the details of those who passed to the specified file.
 void showStudentsThatPassedInFile(const Course &course, const string &filename) {
    ofstream outFile(filename);
-   if (!outFile.is_open())
-      return;
+   if (!outFile.is_open()) return;
    for (size_t i = 0; i < course.get_enrolled_students().size(); i++) {
       if (course.checkIfPassed(course.get_enrolled_students()[i]->get_studentID())) {
          outFile << course.get_enrolled_students()[i]->get_studentID() << " " << course.get_enrolled_students()[i]->get_name() << endl;
@@ -287,10 +149,8 @@ void showStudentsThatPassedInFile(const Course &course, const string &filename) 
    outFile.close();
 }
 
-// Description: Prints a menu for user interaction.
-// Functionality: Displays various options available to the user for interacting with the system.
 void printMenu() {
-   cout << "---------- Academic Management System Menu ----------" << endl;
+   cout << "\n---------- Academic Management System Menu ----------" << endl;
    cout << "1. Add/modify/delete a professor." << endl;
    cout << "2. Add/modify/delete a student." << endl;
    cout << "3. Add/modify/delete a course." << endl;
@@ -306,8 +166,6 @@ void printMenu() {
    cout << "Enter your choice: ";
 }
 
-// Description: The main function of the program.
-// Functionality: Entry point of the program, where execution begins.
 int main() {
    const string students_filename{"Students.csv"};
    const string professors_filename{"Professors.csv"};
@@ -321,126 +179,127 @@ int main() {
    loadProfesssorsforSecretary(sec, professors_filename);
    loadCoursesforSecretary(sec, courses_filename);
 
-   do
-   {
+   do {
       printMenu();
-      cin >> choice;
+      choice = 0;
+      if (!(cin >> choice)) break;
       Professor temp, *temptr{nullptr};
       Student temp1, *temptr1{nullptr};
       Course temp2, *temptr2{nullptr};
       string professorID, studentID, courseID;
-      switch (choice)
-      {
+      switch (choice) {
       case 1:
          cout << "1. Add a professor." << endl;
          cout << "2. Modify a professor." << endl;
          cout << "3. Delete a professor." << endl;
          cout << "Enter your choice: ";
          cin >> subchoice;
-         switch (subchoice)
-         {
-         case 1:
-         {
-            cout << "Name, ProfessorID: ";
+         switch (subchoice) {
+         case 1: {
+            cout << "ProfessorID, Name: ";
+            cin.ignore();
             cin >> temp;
-            sec.add_professor(temp);
-            addProfessorToFile(temp, professors_filename);
+            if (sec.add_professor(temp)) {
+               addProfessorToFile(temp, professors_filename);
+               cout << "Professor added successfully." << endl;
+            } else {
+               cout << "Error: A professor with ID '" << temp.get_professorid() << "' already exists!" << endl;
+            }
          }
          break;
-         case 2:
-         {
+         case 2: {
             sec.printProfessors();
             cout << "Enter the ID of the professor to modify: ";
-            while (true)
-            {
-               cin >> professorID;
-               if (professorID.at(0) == 'P')
-                  break;
-               else
-                  cout << "Invalid input. Please try again." << endl;
+            cin >> professorID;
+            string new_name;
+            cout << "Enter a name: ";
+            cin.ignore();
+            getline(cin, new_name);
+            temptr = sec.modify_professor_name(professorID, new_name);
+            if (temptr != nullptr) {
+               modifyProfessorInFile(professorID, *temptr, professors_filename);
+               cout << "Professor modified successfully." << endl;
+            } else {
+               cout << "Professor not found." << endl;
             }
-            temptr = sec.modify_professor(professorID);
-            modifyProfessorInFile(professorID, *temptr, professors_filename);
          }
          break;
-         case 3:
-         {
+         case 3: {
             sec.printProfessors();
             cout << "Enter the ID of the professor to delete: ";
-            while (1)
-            {
-               cin >> professorID;
-               if (professorID.at(0) == 'P')
-                  break;
-               else
-                  cout << "Invalid choice. Please try again." << endl;
-            }
+            cin >> professorID;
             sec.delete_professor(professorID);
             deleteProfessorFromFile(professorID, professors_filename);
+            cout << "Professor deleted successfully." << endl;
          }
          break;
          default:
             cout << "Invalid choice. Please try again." << endl;
          }
          break;
-      case 2:
-      {
+      case 2: {
          cout << "1. Add a student." << endl;
          cout << "2. Modify a student." << endl;
          cout << "3. Delete a student." << endl;
          cout << "Enter your choice: ";
          cin >> subchoice;
-         switch (subchoice)
-         {
-         case 1:
-         {
-            cout << "Name, StudentID, Semester(number), ECTS(number): ";
+         switch (subchoice) {
+         case 1: {
+            cout << "StudentID, Name, Semester(number), ECTS(number): ";
+            cin.ignore();
             cin >> temp1;
-            sec.add_student(temp1);
-            addStudentToFile(temp1, students_filename);
+            if (sec.add_student(temp1)) {
+               addStudentToFile(temp1, students_filename);
+               cout << "Student added successfully." << endl;
+            } else {
+               cout << "Error: A student with ID '" << temp1.get_studentID() << "' already exists!" << endl;
+            }
          }
          break;
-         case 2:
-         {
+         case 2: {
             sec.printStudents();
             unsigned atr_choice;
             cout << "Enter the ID of the student to modify: ";
-            while (1)
-            {
-               cin >> studentID;
-               if (studentID.at(0) == 'S')
-                  break;
-               else
-                  cout << "Invalid choice. Please try again." << endl;
-            }
+            cin >> studentID;
             cout << "Choose (number) the attribute to modify: 1. Name, 2. Semester, 3. ECTS: ";
-            while (1)
-            {
+            while (1) {
                cin >> atr_choice;
-               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3) {
+               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3)
                   cout << "Invalid choice. Please try again." << endl;
-               } else {
-                  break;
-               }
+               else break;
             }
-            temptr1 = sec.modify_student(studentID, atr_choice);
-            modifyStudentInFile(studentID, *temptr1, students_filename);
+            if (atr_choice == 1) {
+               string new_name;
+               cout << "Enter new name: ";
+               cin.ignore();
+               getline(cin, new_name);
+               temptr1 = sec.modify_student_name(studentID, new_name);
+            } else if (atr_choice == 2) {
+               unsigned new_semester;
+               cout << "Enter new semester: ";
+               cin >> new_semester;
+               temptr1 = sec.modify_student_semester(studentID, new_semester);
+            } else if (atr_choice == 3) {
+               unsigned new_ects;
+               cout << "Enter new ECTS: ";
+               cin >> new_ects;
+               temptr1 = sec.modify_student_ects(studentID, new_ects);
+            }
+            if (temptr1 != nullptr) {
+               modifyStudentInFile(studentID, *temptr1, students_filename);
+               cout << "Student modified successfully." << endl;
+            } else {
+               cout << "Student not found." << endl;
+            }
          }
          break;
-         case 3:
-         {
+         case 3: {
             sec.printStudents();
             cout << "Enter the ID of the student to delete: ";
-            while (1)
-            {
-               cin >> studentID;
-               if (studentID.at(0) == 'S')
-                  break;
-               else
-                  cout << "Invalid choice. Please try again." << endl;
-            }
+            cin >> studentID;
             sec.delete_student(studentID);
             deleteStudentFromFile(studentID, students_filename);
+            cout << "Student deleted successfully." << endl;
          }
          break;
          default:
@@ -448,64 +307,75 @@ int main() {
          }
       }
       break;
-      case 3:
-      {
+      case 3: {
          cout << "1. Add a course." << endl;
          cout << "2. Modify a course." << endl;
          cout << "3. Delete a course." << endl;
          cout << "Enter your choice: ";
          cin >> subchoice;
-         switch (subchoice)
-         {
-         case 1:
-         {
+         switch (subchoice) {
+         case 1: {
             cout << "CourseID, Name, Units(number), Type, Semester(number): ";
+            cin.ignore();
             cin >> temp2;
-            sec.add_course(temp2);
-            addCourseToFile(temp2, courses_filename);
+            if (sec.add_course(temp2)) {
+               addCourseToFile(temp2, courses_filename);
+               cout << "Course added successfully." << endl;
+            } else {
+               cout << "Error: A course with ID '" << temp2.get_courseid() << "' already exists!" << endl;
+            }
          }
          break;
-         case 2:
-         {
+         case 2: {
             sec.printCourses();
             unsigned atr_choice;
             cout << "Enter the ID of the course to modify: ";
-            while (1)
-            {
-               cin >> courseID;
-               if (courseID.at(0) == 'C')
-                  break;
-               else
-                  cout << "Invalid choice. Please try again." << endl;
-            }
+            cin >> courseID;
             cout << "Choose (number) the attribute to modify: 1. Name, 2. Units(number), 3. Type, 4. Semester(number): ";
-            while (1)
-            {
+            while (1) {
                cin >> atr_choice;
-               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3 && atr_choice != 4) {
+               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3 && atr_choice != 4)
                   cout << "Invalid choice. Please try again." << endl;
-               } else {
-                  break;
-               }
+               else break;
             }
-            temptr2 = sec.modify_course(courseID, atr_choice);
-            modifyCourseInFile(courseID, *temptr2, courses_filename);
+            if (atr_choice == 1) {
+               string new_name;
+               cout << "Enter new name: ";
+               cin.ignore();
+               getline(cin, new_name);
+               temptr2 = sec.modify_course_name(courseID, new_name);
+            } else if (atr_choice == 2) {
+               int new_units;
+               cout << "Enter new units: ";
+               cin >> new_units;
+               temptr2 = sec.modify_course_units(courseID, new_units);
+            } else if (atr_choice == 3) {
+               string new_type;
+               cout << "Enter new type: ";
+               cin.ignore();
+               getline(cin, new_type);
+               temptr2 = sec.modify_course_type(courseID, new_type);
+            } else if (atr_choice == 4) {
+               unsigned new_semester;
+               cout << "Enter new semester: ";
+               cin >> new_semester;
+               temptr2 = sec.modify_course_semester(courseID, new_semester);
+            }
+            if (temptr2 != nullptr) {
+               modifyCourseInFile(courseID, *temptr2, courses_filename);
+               cout << "Course modified successfully." << endl;
+            } else {
+               cout << "Course not found." << endl;
+            }
          }
          break;
-         case 3:
-         {
+         case 3: {
             sec.printCourses();
             cout << "Enter the ID of the course to delete: ";
-            while (1)
-            {
-               cin >> courseID;
-               if (courseID.at(0) == 'C')
-                  break;
-               else
-                  cout << "Invalid choice. Please try again." << endl;
-            }
+            cin >> courseID;
             sec.delete_course(courseID);
-            deleteCourseFromFile(courseID, courses_filename); 
+            deleteCourseFromFile(courseID, courses_filename);
+            cout << "Course deleted successfully." << endl;
          }
          break;
          default:
@@ -513,201 +383,142 @@ int main() {
          }
       }
       break;
-      case 4:
-      {
+      case 4: {
          sec.printProfessors();
-         cout << "Enter the ID of professsor to assign the course: ";
-         while (1)
-         {
-            cin >> professorID;
-            if (professorID.at(0) == 'P')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cout << "Enter the ID of professor to assign the course: ";
+         cin >> professorID;
          sec.printCourses();
          cout << "Enter the ID of the course: ";
-         while (true)
-         {
-            cin >> courseID;
-            if (courseID.at(0) == 'C')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> courseID;
          temptr = sec.find_professor(professorID);
-         sec.set_professor(courseID, *temptr);
+         if (temptr == nullptr) {
+            cout << "Professor not found." << endl;
+         } else {
+            if (sec.set_professor(courseID, *temptr)) {
+               cout << "Professor assigned to course successfully." << endl;
+            } else {
+               cout << "Course not found. Failed to assign professor." << endl;
+            }
+         }
       }
       break;
-      case 5:
-      {
+      case 5: {
          sec.printStudents();
          cout << "Enter the ID of student to enrolling in a course: ";
-         while (1)
-         {
-            cin >> studentID;
-            if (studentID.at(0) == 'S')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> studentID;
          sec.printCourses();
          cout << "Enter the ID of course: ";
-         while (1)
-         {
-            cin >> courseID;
-            if (courseID.at(0) == 'C')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> courseID;
          temptr1 = sec.find_student(studentID);
-         sec.reg_stud_to_course(courseID, *temptr1);
-         // Logic for enrolling a student in a course
+         if (temptr1 == nullptr) {
+            cout << "Student not found." << endl;
+         } else {
+            if (sec.reg_stud_to_course(courseID, *temptr1)) {
+               cout << "Student enrolled in course successfully." << endl;
+            } else {
+               cout << "Course not found. Failed to enroll student." << endl;
+            }
+         }
       }
       break;
-      case 6:
-      {
+      case 6: {
          sec.printCourses();
          cout << "Enter Course ID: ";
-         while (true)
-         {
-            cin >> courseID;
-            if (courseID.at(0) == 'C')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> courseID;
          sec.printProfessors();
          cout << "Enter Professor ID: ";
-         while (true)
-         {
-            cin >> professorID;
-            if (professorID.at(0) == 'P')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> professorID;
          temptr2 = sec.find_course(courseID);
-         if (!sec.isProfessorAssignedToCourse(professorID, courseID))
-         {
+         if (temptr2 == nullptr) {
+            cout << "Course not found." << endl;
+            break;
+         }
+         if (!sec.isProfessorAssignedToCourse(professorID, courseID)) {
             cout << "This professor is not assigned to the course." << endl;
             break;
          }
-
          vector<Student *> students = sec.getStudentsInCourse(courseID);
          double grade;
-         for (Student *student : students)
-         {
-            cout << "Enter grade for Student ID " << student->get_studentID() << ": ";
-            while (true)
-            {
+         for (Student *student : students) {
+            cout << "Enter grade for Student ID " << student->get_studentID() << " (" << student->get_name() << "): ";
+            while (true) {
                cin >> grade;
                if (grade > 10.0 || grade < 0.0)
                   cout << "Grade must be between 0.0 and 10.0. Please try again." << endl;
-               else 
-                  break;
+               else break;
             }
             sec.professor_give_grade(*temptr2, student->get_studentID(), professorID, grade);
          }
          cout << "Grades assigned successfully." << endl;
       }
       break;
-      case 7:
-      {
-         // Logic for displaying and saving the list of students who passed a specific course
+      case 7: {
          string tempfile("StudentsPassed.csv");
          sec.printCourses();
          cout << "Enter the ID of course: ";
-         while (true)
-         {
-            cin >> courseID;
-            if (courseID.at(0) == 'C')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> courseID;
          temptr2 = sec.find_course(courseID);
-         showStudentsThatPassedInFile(*temptr2, tempfile);
+         if (temptr2 != nullptr) {
+            showStudentsThatPassedInFile(*temptr2, tempfile);
+            cout << "Passed students list saved to StudentsPassed.csv." << endl;
+         } else {
+            cout << "Course not found." << endl;
+         }
       }
       break;
-      case 8:
-      {
+      case 8: {
          sec.printProfessors();
          cout << "Please enter the ID of professor: ";
-         while (true)
-         {
-            cin >> professorID;
-            if (professorID.at(0) == 'P')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> professorID;
          temptr = sec.find_professor(professorID);
-         sec.printStatistics(*temptr);
-         // Logic for enabling a professor to print semester statistics
+         if (temptr != nullptr) {
+            sec.printStatistics(*temptr);
+         } else {
+            cout << "Professor not found." << endl;
+         }
       }
       break;
-      case 9:
-      {
+      case 9: {
          unsigned sem;
          sec.printStudents();
          cout << "Enter the ID of student: ";
-         while (true)
-         {
-            cin >> studentID;
-            if (studentID.at(0) == 'S')
-               break;
-            else
-               cout << "Invalid choice. Please try again." << endl;
-         }
+         cin >> studentID;
          temptr1 = sec.find_student(studentID);
-         cout << "Choose (number) between 1. Current Semester, 2. All Semesters: ";
-         cin >> sem;
-         if (sem == 1)
-            temptr1->printSemesterGrades();
-         else if (sem == 2)
-            temptr1->printGrades();
-         else
-            cout << "Invalid choice. Please try again." << endl;
-         // Logic for allowing a student to print detailed grades
+         if (temptr1 != nullptr) {
+            cout << "Choose (number) between 1. Current Semester, 2. All Semesters: ";
+            cin >> sem;
+            if (sem == 1) temptr1->printSemesterGrades();
+            else if (sem == 2) temptr1->printGrades();
+            else cout << "Invalid choice. Please try again." << endl;
+         } else {
+            cout << "Student not found." << endl;
+         }
       }
       break;
-      case 10:
-      {
+      case 10: {
          sec.printGraduates();
-         // Logic for printing a list of students eligible to graduate
       }
       break;
-      case 11:
-      {
+      case 11: {
          cout << "Exiting the program..." << endl;
       }
       break;
       default:
          cout << "Invalid choice. Please try again." << endl;
       }
-
-      if (choice != 11)
-      {
+      if (choice != 11) {
          cout << "Do you want to end this semester (Y OR N): ";
-         while (true)
-         {
+         while (true) {
             cin >> end_semester;
             if (end_semester != 'Y' && end_semester != 'N')
                cout << "Invalid choice. Please try again by typing either Y or N." << endl;
-            else
-               break;
+            else break;
          }
-         if (end_semester == 'Y')
-         {
+         if (end_semester == 'Y') {
             sec.change_students_semester();
-         }
-         else if (end_semester == 'N')
+         } else if (end_semester == 'N')
             continue;
       }
-
    } while (choice != 11);
-
    return 0;
 }

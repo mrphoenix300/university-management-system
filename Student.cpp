@@ -1,128 +1,99 @@
 #include "Student.hpp"
+#include "Course.hpp"
 
-// Constructor without arguments
-Student::Student()
-    : Person(" "), studentID {" "}, semester {0}, ECTS{0} {
-} 
+Student::Student() : Person(" "), studentID(" "), semester(0), ECTS(0), pending_graduation(false) {} 
 
-// Constructor with arguments
 Student::Student(std::string n, std::string am, unsigned y, unsigned p)
-    : Person(n), studentID {am}, semester {y}, ECTS {p}, pending_graduation {(y > 8)} {
-}
+    : Person(n), studentID(am), semester(y), ECTS(p), pending_graduation(y > 8) {}
 
-// Copy constructor 
 Student::Student(const Student &source)
     : Person(source), studentID(source.studentID), semester(source.semester), ECTS(source.ECTS), pending_graduation(source.pending_graduation) {
-
-        for (auto course : courses) {
-            delete course;
-        }
-        courses.clear();
-
-        for (auto course : source.courses) {
-            courses.push_back(new Course(*course));
-        }
+    courses = source.courses;
 }
 
-// Destructor
 Student::~Student() {
-    for (auto course : courses) {
-        delete course;
-    }
     courses.clear();
 }
 
-// some functions to get information from student
+std::string Student::get_studentID() const { return studentID; }
+unsigned Student::get_semester() const { return semester; }
+unsigned Student::get_ECTS() const { return ECTS; }
+bool Student::get_pending_graduation() const { return pending_graduation; }
 
-std::string Student::get_studentID() const {
-    return studentID;
-}
+void Student::set_ID(std::string studentID) { this->studentID = studentID; }
+void Student::set_semester(unsigned semester) { this->semester = semester; }
+void Student::set_ECTS(unsigned ECTS) { this->ECTS = ECTS; }
+void Student::set_pending_graduation(bool pending_graduation) { this->pending_graduation = pending_graduation; }
 
-unsigned Student::get_semester() const {
-    return semester;
-}
-
-unsigned Student::get_ECTS() const {
-    return ECTS;
-}
-
-bool Student::get_pending_graduation() const {
-    return pending_graduation;
-}
-
-// some functions to set information to student
-void Student::set_ID(std::string studentID) {
-    this->studentID = studentID;
-}
-
-void Student::set_semester(unsigned semester) {
-    this->semester = semester;
-}
-
-void Student::set_ECTS(unsigned ECTS) {
-    this->ECTS = ECTS;
-}
-
-void Student::set_pending_graduation(bool pending_graduation) {
-    this->pending_graduation = pending_graduation;
-}
-
-// overload the assignment operator
-Student &Student::operator=(Student &rhs) {
-    if (this == &rhs)
-       return *this;
-    
+Student &Student::operator=(const Student &rhs) {
+    if (this == &rhs) return *this;
     name = rhs.name;
     studentID = rhs.studentID;
     semester = rhs.semester;
+    ECTS = rhs.ECTS;
     pending_graduation = rhs.pending_graduation;
-
-    courses.clear();
-    for (size_t i {}; i < rhs.courses.size(); i++) {
-        courses.push_back(rhs.courses[i]);
-    }
-
+    courses = rhs.courses;
     return *this;
 }
 
-// Description: Enrolls the student in a course.
-// Parameters: course (Course*): Pointer to the course in which the student is to be enrolled.
-// Functionality: Adds the student to the specified course.
+std::ostream &operator<<(std::ostream& os, const Student& student) {
+    os << student.studentID << "," << student.name << "," << student.semester << "," << student.ECTS;
+    return os;
+}
+
+// Διορθώθηκε: Try-catch block για ασφαλή μετατροπή std::stoi
+std::istream &operator>>(std::istream& is, Student& student) {
+    std::string idStr, nameStr, semStr, ectsStr;
+    if (!getline(is, idStr, ',') || !getline(is, nameStr, ',') || !getline(is, semStr, ',') || !getline(is, ectsStr)) {
+        is.setstate(std::ios::failbit);
+        return is;
+    }
+    try {
+        student.studentID = idStr;
+        student.name = nameStr;
+        student.semester = std::stoi(semStr);
+        student.ECTS = std::stoi(ectsStr);
+        student.pending_graduation = (student.semester > 8);
+    } catch (...) {
+        is.setstate(std::ios::failbit);
+    }
+    return is;
+}
+
 void Student::enrollInCourse(Course* course) {
     courses.push_back(course);
 }
 
-// Description: Prints the grades for the current semester.
-// Functionality: Iterates over the courses in which the student is enrolled, calculates and prints the grades for courses belonging to the current semester, and calculates the GPA for the semester.
-void Student::printSemesterGrades() const
-{
-    double sum {};
+void Student::printSemesterGrades() const {
+    double sum = 0;
     int semester_courses = 0;
-    for (size_t i = 0; i < courses.size(); i++)
-    {
-        if (semester==courses[i]->get_semester())
-        {
-            std::cout << "Course name: " << courses[i]->get_name() << "\tGrade: " << courses[i]->getGrade(this->studentID); 
+    for (size_t i = 0; i < courses.size(); i++) {
+        if (semester == courses[i]->get_semester()) {
+            std::cout << "Course name: " << courses[i]->get_name() << "\tGrade: " << courses[i]->getGrade(this->studentID) << std::endl; 
             sum += courses[i]->getGrade(this->studentID);
             semester_courses++;
         }
     }
-    double GPA = sum / semester_courses;
-    std::cout << "The student's GPA is: " << GPA << std::endl;
+    if (semester_courses > 0) {
+        double GPA = sum / semester_courses;
+        std::cout << "The student's GPA is: " << GPA << std::endl;
+    } else {
+        std::cout << "No courses enrolled in this semester." << std::endl;
+    }
 }
 
-// Description: Prints grades for all semesters.
-// Functionality: Iterates over all courses in which the student is enrolled, calculates and prints the grades for each course, and calculates the overall GPA.
 void Student::printGrades() const {
-    double sum {};
-    int all_courses {};
+    double sum = 0;
+    int all_courses = 0;
     for (auto course : courses) {
         std::cout << "Course name: " << course->get_name() << "\tGrade: " << course->getGrade(this->studentID) << std::endl; 
         sum += course->getGrade(this->studentID);
         all_courses++;
     }
-
-    double GPA = sum / all_courses;
-    std::cout << "The student's GPA is: " << GPA << std::endl;
-
+    if (all_courses > 0) {
+        double GPA = sum / all_courses;
+        std::cout << "The student's GPA is: " << GPA << std::endl;
+    } else {
+        std::cout << "No grades recorded." << std::endl;
+    }
 }

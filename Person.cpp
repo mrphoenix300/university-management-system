@@ -1,34 +1,22 @@
 #include "Person.hpp"
 
-Person::Person() // Constructor Person no arguments implementation
-    : name {""} {
-}
+Person::Person() : name("") {}
 
-Person::Person(std::string name) // Constructor Person with arguments implementation
-    : name {name} {
-}
+Person::Person(std::string name) : name(name) {}
 
-Person::Person(const Person &source)
-    : name(source.name) {
-}
+Person::Person(const Person &source) : name(source.name) {}
 
-Person::~Person() { // Destructor Person implementation
-}
+Person::~Person() {}
 
-//Get information about Person implementation
 std::string Person::get_name() const { return name; } 
-// Set information about Person
+
 void Person::set_name(std::string name) { this->name = name; }
 
-
-// overloaded insertion operator for print Person inforamtion implementation
 std::ostream &operator<<(std::ostream &os, const Person &rhs) {
-
-    os << rhs.get_name() << " |\t" << std::endl;
+    os << rhs.get_name();
     return os;
 }
 
-// overloaded extraction operator for input Person information implementation
 std::istream &operator>>(std::istream &in, Person &rhs) {
     std::string temp_name;
     std::cout << "Please give the name of the person: ";
@@ -37,10 +25,6 @@ std::istream &operator>>(std::istream &in, Person &rhs) {
     return in;
 }
 
-// overloaded equality operator implementation
-bool Person::operator==(Person &rhs)  {
-    if (name.compare(rhs.get_name()) == 0) {
-        return true;
-    }
-    return false;
+bool Person::operator==(const Person &rhs) const {
+    return name == rhs.name;
 }

@@ -1,23 +1,20 @@
 #ifndef _COURSE_H_
 #define _COURSE_H_
 
-
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 #include "Student.hpp"
 #include "Professor.hpp"
-
-class Student;
-class Professor;
 
 class Course {
 private:
     std::string courseID;
     std::string name;
     int units;
-    std::string type; // Compulsary or Elective
-    unsigned semester ; 
+    std::string type; 
+    unsigned semester; 
     std::vector<Student*> enrolled_students;
     std::vector<Professor*> professors;
     std::map<std::string, double> studentGrades;
@@ -41,28 +38,14 @@ public:
     void set_type(std::string course_type);
     void set_semester(unsigned course_semester);
 
-    Course &operator=(Course &rhs);
-    friend std::ostream& operator<<(std::ostream& os, const Course& course) {
-        os << course.courseID << "," << course.name << "," << course.type << "," << course.semester << "," << course.units;
-        return os;
-    }
-    friend std::istream& operator>>(std::istream& is, Course& course) {
-        getline(is, course.courseID, ',');
-        getline(is, course.name, ',');
-        std::string unitsStr;
-        getline(is, unitsStr, ',');
-        course.units = std::stoi(unitsStr);
-        getline(is, course.type, ',');
-        std::string semesterStr;
-        getline(is, semesterStr);
-        course.semester = std::stoi(semesterStr);
-        return is;
-    }
+    Course &operator=(const Course &rhs);
+    
+    friend std::ostream& operator<<(std::ostream& os, const Course& course);
+    friend std::istream& operator>>(std::istream& is, Course& course);
     
     void add_professors(Professor* prof);
     void enrollStudent(Student* student);
     void printEnrolledStudents() const;
-    
     
     void assignGrade(const std::string& studentID, double grade);
     double getGrade(const std::string& studentID) const;
@@ -70,4 +53,4 @@ public:
     void printStatistics() const;
 };
 
-#endif 
+#endif
