@@ -13,7 +13,7 @@ public:
     Person(); // Constructor Person no arguments
     Person(std::string name); // Constructor Person with arguments
     Person(const Person &source);
-    ~Person(); // Destructor Person
+    virtual ~Person(); // Destructor Person
     
     //Get information about Person 
     std::string get_name() const;
