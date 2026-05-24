@@ -59,7 +59,7 @@ public:
         return is;
     }
     
-    void add_professors(Professor prof);
+    void add_professors(Professor* prof);
     void enrollStudent(Student* student);
     void printEnrolledStudents() const;
     

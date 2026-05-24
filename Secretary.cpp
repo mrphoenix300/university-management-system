@@ -136,9 +136,10 @@ Course* Secretary::modify_course(const std::string &course_id, const unsigned ch
 // Description: Deletes a student from the system.
 // Parameters: student_id (const std::string&): The ID of the student to delete.
 void Secretary::delete_student(const std::string &student_id) {
-    for (auto student : students) {
-        if (student->get_studentID() == student_id) {
-            delete student;
+    for (auto it = students.begin(); it != students.end(); ++it) {
+        if ((*it)->get_studentID() == student_id) {
+            delete *it;          // free memory
+            students.erase(it);  // remove from vector
             break;
         }
     }
@@ -147,9 +148,10 @@ void Secretary::delete_student(const std::string &student_id) {
 // Description: Deletes a professor from the system.
 // Parameters: professor_id (const std::string&): The ID of the professor to delete.
 void Secretary::delete_professor(const std::string &professor_id) {
-    for (auto professor : professors) {
-        if (professor->get_professorid() == professor_id) {
-            delete professor;
+    for (auto it = professors.begin(); it != professors.end(); ++it) {
+        if ((*it)->get_professorid() == professor_id) {
+            delete *it;
+            professors.erase(it);
             break;
         }
     }
@@ -158,9 +160,10 @@ void Secretary::delete_professor(const std::string &professor_id) {
 // Description: Deletes a course from the system.
 // Parameters: course_id (const std::string&): The ID of the course to delete.
 void Secretary::delete_course(const std::string &course_id) {
-    for (auto course : courses) {
-        if (course->get_courseid() == course_id) {
-            delete course;
+    for (auto it = courses.begin(); it != courses.end(); ++it) {
+        if ((*it)->get_courseid() == course_id) {
+            delete *it;
+            courses.erase(it);
             break;
         }
     }
@@ -218,7 +221,8 @@ bool Secretary::set_professor(const std::string course_id, Professor &prof) {
     prof.assignCourse(this->find_course(course_id));
     for (auto course : courses) {
         if (course->get_courseid() == course_id) {
-            course->add_professors(prof);
+            // we pass the pointer of professor which found in system
+            course->add_professors(this->find_professor(prof.get_professorid()));
             return true;
         }
     }

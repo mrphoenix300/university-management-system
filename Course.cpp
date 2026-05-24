@@ -17,13 +17,9 @@ Course::Course(const Course &source)
 
 // Destructor
 Course::~Course() {
-    for (auto student : enrolled_students) {
-        delete student;
-    }
-    for (auto professor : professors) {
-        delete professor;
-    }
-
+    
+    enrolled_students.clear();
+    professors.clear();
     studentGrades.clear();
 }
 
@@ -104,10 +100,8 @@ Course &Course::operator=(Course &rhs) {
 
 // Description: Adds a professor to the course.
 // Parameters: prof (Professor): The professor to add to the course.
-void Course::add_professors(Professor prof) {
-    Professor *temp {new Professor()};
-    *temp = prof;
-    professors.push_back(temp);
+void Course::add_professors(Professor* prof) {
+    professors.push_back(prof);
 }
 
 // Description: Enrolls a student in the course.

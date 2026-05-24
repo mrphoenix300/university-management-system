@@ -243,11 +243,9 @@ void loadStudentsforSecretatry(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Student temp;
 
-   while (!(inFile.eof())) {
-      inFile >> temp;
+   while (inFile >> temp) { 
       sec.add_student(temp);
    }
-
    inFile.close();
 }
 
@@ -256,11 +254,9 @@ void loadProfesssorsforSecretary(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Professor temp;
 
-   while (!(inFile.eof())) {
-      inFile >> temp;
+   while (inFile >> temp) {
       sec.add_professor(temp);
    }
-
    inFile.close();
 }
 
@@ -268,12 +264,9 @@ void loadProfesssorsforSecretary(Secretary &sec, const string filename) {
 void loadCoursesforSecretary(Secretary &sec, const string filename) {
    ifstream inFile(filename);
    Course temp;
-
-   while (!(inFile.eof())) {
-      inFile >> temp;
+   while (inFile >> temp) {
       sec.add_course(temp);
    }
-
    inFile.close();
 }
 
@@ -424,8 +417,11 @@ int main() {
             while (1)
             {
                cin >> atr_choice;
-               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3)
+               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3) {
                   cout << "Invalid choice. Please try again." << endl;
+               } else {
+                  break;
+               }
             }
             temptr1 = sec.modify_student(studentID, atr_choice);
             modifyStudentInFile(studentID, *temptr1, students_filename);
@@ -486,8 +482,11 @@ int main() {
             while (1)
             {
                cin >> atr_choice;
-               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3)
+               if (atr_choice != 1 && atr_choice != 2 && atr_choice != 3 && atr_choice != 4) {
                   cout << "Invalid choice. Please try again." << endl;
+               } else {
+                  break;
+               }
             }
             temptr2 = sec.modify_course(courseID, atr_choice);
             modifyCourseInFile(courseID, *temptr2, courses_filename);
@@ -506,7 +505,7 @@ int main() {
                   cout << "Invalid choice. Please try again." << endl;
             }
             sec.delete_course(courseID);
-            deleteStudentFromFile(courseID, courses_filename);
+            deleteCourseFromFile(courseID, courses_filename); 
          }
          break;
          default:
